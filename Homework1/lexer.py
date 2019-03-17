@@ -14,11 +14,8 @@ IMPLIES = 7  # =>
 IFF = 8      # <=>
 COMMA = 9    # ,
 INTEGER = 10 # 0-9 integers
-NEWLINE = 11 # Used to figure out when to increment the row.
-EPSILON = 12 # Used to terminate the lines.
 
-expressions = ((r'[\n\t]+',               NEWLINE),
-               (r'#[^\n]*',               None),
+expressions = ((r'\n',                    None),
                (r' +',                    None),   # Whitespace
                (r'\(',                    LPAR),
                (r'\)',                    RPAR),
@@ -31,6 +28,28 @@ expressions = ((r'[\n\t]+',               NEWLINE),
                (r'[0-1]+',                INTEGER),
                (r'[A-Za-z][A-Za-z0-9_]*', ID),
              )
+
+def tag_to_string(tag):
+    if tag == ID:
+        return "ID"
+    if tag == LPAR:
+        return "LPAR"
+    if tag == RPAR:
+        return "RPAR"
+    if tag == NOT:
+        return "NOT"
+    if tag == AND:
+        return "AND"
+    if tag == OR:
+        return "OR"
+    if tag == IMPLIES:
+        return "IMPLIES"
+    if tag == IFF:
+        return "IFF"
+    if tag == COMMA:
+        return "COMMA"
+    if tag == INTEGER:
+        return "INTEGER"
 
 class Token:
     # This is to be able to store the location data inside the token.
@@ -72,18 +91,11 @@ class Lexer:
                     # If tag is None, then it's a comment, whitespace, or some other such thing.
                     # Don't add it if this is the case.
                     if tag:
-                        if tag == NEWLINE:
-                            # By adding an epislon to the end, we can determine,
-                            # in the parser, when we haved reached the end
-                            # without accidently going out of bounds
-                            self.tokens.append(Token("[EPSILON]", EPSILON, row, column))
-                            row += 1
-                            column = 0
-                        else:
-                            self.tokens.append(Token(token, tag, row, column))
+                        self.tokens.append(Token(token, tag, row, column))
                     break
             if not current_match:
-                print 'Illegal character: ' + self.text[pos] + " on line " + str(column) + " and column " + str(column)
+                import pdb;pdb.set_trace()
+                print 'Illegal character \'' + self.text[pos] + '\' at ' + self.text[pos] + " on line " + str(column) + " and column " + str(column)
                 pos += 1
                 column += 1
                 lexer_error = True
