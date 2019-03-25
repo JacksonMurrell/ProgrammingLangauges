@@ -1,0 +1,8 @@
+To run this program simply do:
+
+python main.py <filename.txt>
+
+from any terminal.
+
+You may specify the --debug/-d option to allow for
+post-mortem debugging.

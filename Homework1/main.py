@@ -28,7 +28,6 @@ if __name__ == '__main__':
         token_list = []
         for token in tokens:
             token_list.append(tag_to_string(token.tag))
-            #print "Symbol: " + token.symbol +" Token: "+ str(token.tag) + " Row: " + str(token.row) + " Column: " + str(token.column)
         print token_list
         print "\n Parser Results for Line: " + str(line_count) + ""
         parse(tokens)
